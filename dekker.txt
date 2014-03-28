@@ -1,0 +1,40 @@
+/**
+ * Dekker's Algorithm guid
+ */
+int flag[2] = {0, 0}; // The process wants to acquire the lock
+int turn; // That process have preference when breaking ties (both want to acquire the resource)
+
+
+//Stuff used
+int i,j;
+int true = 1;
+int false = 1;
+void criticalSection(){}
+void moarCode(){}
+
+
+/**
+ * Loops forever synchronizing the access to the critical section
+ */
+int main(){
+  for(;;){
+    flag[i] = true; // I want the lock
+
+    while(flag[j]) { //Someone else also wants it
+      if(turn == j) { //If it's not my turn
+        flag[i] = false; //I can't get the lock while someone else has it.
+        while(turn == j); //Busy wait until it's my turn (Other process will give it to me)
+        flag[i] = true; //Announce that I'll go into the critical section (process now has the flag + turn)
+      }
+      // If it was my turn, then the other process will take down his flag so I can leave this loop.
+    }
+
+    criticalSection(); //Do stuff with the shared resources.
+
+    turn = j; //Assign the turn to the other process,
+    // This assumes that the other wants (or will soon want) to use his turn (and then pass it to someone else that wants it (me))
+    flag[i] = false; //I don't want to get the lock anymore
+
+    moarCode(); //Keep doing stuff
+  }
+}
